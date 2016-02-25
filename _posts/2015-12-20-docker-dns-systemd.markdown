@@ -17,13 +17,14 @@ E: Failed to fetch http://archive.ubuntu.com/ubuntu/pool/main/r/recode/librecode
 Could not resolve ‘archive.ubuntu.com’
 {% endhighlight %}
  
+## Solution:
 
-# Solution:
-1. Add other nameservers in /etc/default/docker:
+### 1. Add other nameservers in /etc/default/docker:
 {% highlight ini %}
-DOCKER_OPTS=”–dns 208.67.222.222 –dns 208.67.220.220″
+DOCKER_OPTS="–dns 208.67.222.222 –dns 208.67.220.220"
 {% endhighlight %}
-2. As systemd is not using this config file (only Upstart and SysVinit), load and use it in /etc/systemd/system/docker.service.d/docker.conf:
+
+### 2. As systemd is not using this config file (only Upstart and SysVinit), load and use it in /etc/systemd/system/docker.service.d/docker.conf:
 {% highlight ini %}
 [Service]
 EnvironmentFile=-/etc/default/docker
@@ -32,6 +33,7 @@ ExecStart=/usr/bin/docker daemon $DOCKER_OPTS -H fd://
 {% endhighlight %}
 (Empty ExecStart is important.)
 
-4. Reload configuration and restart:
+### 3. Reload configuration and restart:
+{% highlight bash %}
 sudo systemctl daemon-reload && sudo service docker restart
-
+{% endhighlight %}
